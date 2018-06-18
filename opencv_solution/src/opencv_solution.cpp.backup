@@ -1,0 +1,48 @@
+# include <ros/ros.h>
+# include <image_transport/image_transport.h>
+
+// not sure if these two are necessary, but are in the tutorial (http://wiki.ros.org/image_transport/Tutorials/SubscribingToImages) so I'll include them anyway
+#include <opencv2/highgui/highgui.hpp>
+#include <cv_bridge/cv_bridge.h>
+
+void detect_person(const sensor_msgs::ImageConstPtr& image)
+{
+  ROS_INFO_STREAM("Image message received by opencv_solution_node");
+}
+
+int main(int argc, char** argv)
+{
+  ros::init(argc, argv, "opencv_solution_node");
+  ros::NodeHandle nh;
+
+  cv::namedWindow("view");
+  cv::startWindowThread();
+
+  image_transport::ImageTransport it(nh);
+  image_transport::Subscriber image_subscriber(it.subscribe("/prius/front_camera/image_raw", 1, detect_person));
+
+  ros::spin();
+  cv::destroyWindow("view");
+}
+
+// class ImageToDetection
+// {
+//
+// public:
+//   ImageToDetection(ros::NodeHandle& nh)
+//     : it_(nh)
+//     //image_subscriber_(nh.subscribe("/prius/front_camera/image_raw", 10, &ImageToDetection::detect_person, this))
+//   {
+//     image_subscriber_ = it_.subscribe("/prius/front_camera/image_raw", 1, &ImageToDetection::detect_person, this);
+//   }
+//
+//   void detect_person(const sensor_msgs::ImageConstPtr& image)
+//   {
+//     ROS_INFO_STREAM("Image message received by opencv_solution_node");
+//   }
+//
+// private:
+//
+//   image_transport::ImageTransport it_;
+//   image_transport::Subscriber image_subscriber_;
+// };
